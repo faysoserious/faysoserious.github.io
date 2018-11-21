@@ -3,9 +3,9 @@
 	<head>
 		<meta charset="utf-8">
 		<title>D3: Time scale</title>
-		<script type="text/javascript" src="../d3/d3.js"></script>
+		<script type="text/javascript" src="d3/d3.js"></script>
 		<style type="text/css">
-			/* No style rules here yet */		
+			/* No style rules here yet */
 		</style>
 	</head>
 	<body>
@@ -14,7 +14,7 @@
 			var w = 500;
 			var h = 300;
 			var padding = 40;
-			
+
 			var dataset, xScale, yScale;  //Empty, for now
 			//For converting strings to Dates
 			var parseTime = d3.timeParse("%m/%d/%y");
@@ -44,7 +44,7 @@
 									d3.max(dataset, function(d) { return d.Amount; })
 								])
 							   .range([h - padding, padding]);
-		
+
 				//Create SVG element
 				var svg = d3.select("body")
 							.append("svg")
@@ -80,7 +80,7 @@
 				   })
 				   .attr("r", 2);
 			});
-			
+
 		</script>
 	</body>
 </html>
