@@ -28,7 +28,11 @@
 					Amount: parseInt(d.Sound)
 				};
 			}
-			//Load in the data
+            //Load in the data
+            d3.json("data.json", function(error, data) {
+                console.log(data);
+            }
+			/*//Load in the data
 			d3.csv("Average.csv", rowConverter, function(data) {
 				//Copy data into global dataset
 				dataset = data;
@@ -81,7 +85,7 @@
 				   		return yScale(d.amount);
 				   })
 				   .attr("r", 2);
-			});
+			});*/
 
 		</script>
 	</body>
