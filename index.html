@@ -29,10 +29,9 @@
 				};
 			}
             //Load in the data
-            d3.json("data.json", function(error, data) {
-                console.log(data.length);
-                
-            });
+            d3.json("https://scadadataapi.azurewebsites.net/api/values", function(error, data) {
+                console.log(data); // this is your data
+                });
 			/*//Load in the data
 			d3.csv("Average.csv", rowConverter, function(data) {
 				//Copy data into global dataset
