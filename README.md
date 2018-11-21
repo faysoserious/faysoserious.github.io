@@ -1,2 +1,2 @@
 # faysoserious.github.io
-Fay's website
+Viz Project of Advanced Project of Digital Media Engineering
