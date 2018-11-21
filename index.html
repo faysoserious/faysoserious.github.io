@@ -34,7 +34,7 @@
 				//Create scale functions
 				xScale = d3.scaleTime()
 							   .domain([
-									d3.min(dataset, function(d) { return d.Date; }),
+									d3.min(dataset, function(d) { return d.Interval; }),
 									d3.max(dataset, function(d) { return d.Date; })
 								])
 							   .range([padding, w - padding]);
