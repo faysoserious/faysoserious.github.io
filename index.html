@@ -24,6 +24,7 @@
 			var rowConverter = function(d) {
 				return {
 					Date: parseTime(d.Interval),
+                    
 					Amount: parseInt(d.Sound)
 				};
 			}
@@ -32,6 +33,7 @@
 				//Copy data into global dataset
 				dataset = data;
 				//Create scale functions
+                console.log(dataset);
 				xScale = d3.scaleTime()
 							   .domain([
 									d3.min(dataset, function(d) { return d.Date; }),
