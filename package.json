@@ -1,0 +1,26 @@
+{
+  "name": "highchart_viz",
+  "version": "1.0.0",
+  "description": "install highchart for visualizations",
+  "main": "viz.js",
+  "dependencies": {
+    "highcharts": "^6.2.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "\u001b[D"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/faysoserious/faysoserious.github.io.git"
+  },
+  "keywords": [
+    "visualizations"
+  ],
+  "author": "Fei Xie",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/faysoserious/faysoserious.github.io/issues"
+  },
+  "homepage": "https://github.com/faysoserious/faysoserious.github.io#readme"
+}
