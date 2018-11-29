@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <!--link rel="stylesheet" href="style.css" />-->
+    <title>Main View</title>
+    <script type="text/javascript">
+
+        var deviceId;
+        var building;
+        var floor;
+        var zone;
+        var previousZone;
+        var nextZone;
+
+        window.onload = function setTitle()
+        {
+
+            var queryString = decodeURIComponent(window.location.search);
+
+            deviceId = queryString.substring(1);
+            var splitString = deviceId.split("_");
+            building = splitString[0];
+            floor = splitString[1];
+            zone = splitString[2]; 
+
+            var zoneInt = parseInt(zone);
+            
+            if (zoneInt > 1)
+            {
+                previousZone = zoneInt - 1;
+            } else
+            {
+                previousZone = 10;
+            }
+
+            if (zoneInt < 10)
+            {
+                nextZone = zoneInt + 1;
+            } else
+            {
+                nextZone = 1;
+            }
+
+
+            document.getElementById("ZoneId").innerHTML = "Zone " + zone;
+            document.getElementById("previousZone").innerHTML = "ZONE " + previousZone;
+            document.getElementById("nextZone").innerHTML = "ZONE " + nextZone;
+            setTimeout(HttpGetAsync("https://scadadataapi.azurewebsites.net/api/values", UpdateData), 2000)
+        }
+
+
+        function UpdateData(dataString)
+        {
+            var elements = document.querySelectorAll("td[scada-data-point]");
+
+            //Convert returned data to dictionary
+            var dataJson = JSON.parse(dataString);
+            var data = {};
+            for (var i = 0; i < dataJson.length; i++)
+            {
+                data[dataJson[i]["pointId"]] = dataJson[i];
+            }
+            
+            var i;
+            for (i = 0; i < elements.length; i++)
+            {
+                var scadaDataPoint = deviceId + "_" + elements[i].getAttribute("scada-data-point");
+                var dataPoint = data[scadaDataPoint];
+
+                if (dataPoint) 
+                {
+                    elements[i].innerHTML = dataPoint["value"];
+
+                    var unitString = "td[scada-data-unit='" + elements[i].getAttribute("scada-data-point") + "']";
+                    var unitElement = document.querySelector(unitString);
+                    if (unitElement)
+                    {
+                        var unitText;
+                        var dataUnit = dataPoint["unit"];
+                        switch (dataUnit) 
+                        {
+                            case "cm":
+                                unitText = "cm";
+                                break;
+                            case "degree-celsius":
+                                unitText = String.fromCharCode(0xB0) + "C";
+                                break;
+                            case "%":
+                                unitText = "%";
+                                break;
+                            case "dB":
+                                unitText = "";
+                                break;
+                            case "lux":
+                                unitText = "lux";
+                                break;
+                            default:
+                                unitText = "";
+                        }
+                        unitElement.innerHTML = unitText;
+                    }
+                    
+                }
+                else
+                {
+                    elements[i].innerHTML = "--"
+
+                    var unitString = "td[scada-data-unit='" + elements[i].getAttribute("scada-data-point") + "']";
+                    var unitElement = document.querySelector(unitString);
+                    if (unitElement)
+                    {
+                        unitText = "";
+                    }
+                }
+            }
+        }
+
+        function HttpGetAsync(theUrl, callback)
+        {
+            var xmlHttp = new XMLHttpRequest();
+            xmlHttp.onreadystatechange = function ()
+            {
+                if (xmlHttp.readyState == 4)
+                {
+                    if (xmlHttp.status == 200) 
+                    {
+                        callback(xmlHttp.responseText);
+                    }
+                    else 
+                    {
+                        callback("[]");
+                    }
+                    setTimeout(HttpGetAsync("https://scadadataapi.azurewebsites.net/api/values", UpdateData), 2000)
+
+                }
+            }
+            xmlHttp.open("GET", theUrl, true); // true for asynchronous
+            xmlHttp.send(null);
+        }
+
+        
+        function GoToFloorPlan()
+        {
+            switch (floor) 
+            {
+                case "DI000":
+                    location.href = "GroundFloor.html";
+                    break;
+                case "DI100":
+                    location.href = "FirstFloor.html";
+                    break;
+                case "DI200":
+                    location.href = "SecondFloor.html";
+                    break;
+                default:
+                    location.href = "Main.html";
+            }
+        }
+
+        function GoToPreviousZone()
+        {
+
+            location.href = "Zone.html?" + building + "_" + floor + "_" + ('0' + previousZone).slice(-2);
+        }
+
+        function GoToNextZone()
+        {
+            location.href = "Zone.html?" + building + "_" + floor + "_" + ('0' + nextZone).slice(-2);
+        }
+
+
+    </script>
+</head>
+<body >
+   
+    <!--div style="position:absolute;left:50px;top:50px;z-index:-1;width:900px;">
+        <a href="Main.html">
+            <img src="Home.svg" style="position:absolute;left:0px;top:0px;z-index:-1;width:70px;height:70px;" />
+        </a>
+        <b style="position:absolute;left:90px;top:-11px;z-index:-1;font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;font-size:60px;color:#000000;" id="ZoneId"></b>
+    </div style="position:absolute;left:1070px;top:88px;z-index:-1;width:300px;">-->
+    
+    <div style="position:absolute;left:50px;top:150px;z-index:-1;width:885px; font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;font-size:xx-large">
+        <div >
+            <fieldset>
+                <legend>Lys</legend>
+                <table style="width:100%">
+                    <tr>
+                        <td id="variable">Belysningsstyrke</td>
+                        <td id="value" scada-data-point="LX01">--</td>
+                        <td id="unit" scada-data-unit="LX01"></td>
+                    </tr>
+                    <tr>
+                        <td>Farve</td>
+                        <td>--</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>Lysniveau</td>
+                        <td>--</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>Bevægelse</td>
+                        <td>--</td>
+                        <td></td>
+                    </tr>
+                </table>
+            </fieldset>
+        </div>
+        <div>
+            <fieldset>
+                <legend>Indeklima</legend>
+                <table style="width:100%">
+                    <tr>
+                        <td id="variable">CO<sub>2</sub></td>
+                        <td id="value">--</td>
+                        <td id="unit"></td>
+                    </tr>
+                    <tr>
+                        <td>Temperatur</td>
+                        <td scada-data-point="TR01">--</td>
+                        <td scada-data-unit="TR01"></td>
+                    </tr>
+                    <tr>
+                        <td>Luftfugtighed</td>
+                        <td scada-data-point="HR01">--</td>
+                        <td scada-data-unit="HR01"></td>
+                    </tr>
+                    <tr>
+                        <td>Lydniveau</td>
+                        <td scada-data-point="SR01">--</td>
+                        <td scada-data-unit="SR01"></td>
+                    </tr>
+                </table>
+            </fieldset>
+        </div>
+        
+    </div>
+   
+    <div style="position:absolute;left:985px;top:150px;z-index:-1;width:885px; font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;font-size:xx-large">
+        <div>
+            <fieldset>
+                <legend>Ventilation</legend>
+                <table style="width:100%">
+                    <tr>
+                        <td id="variable">Luftmængde</td>
+                        <td id="value">--</td>
+                        <td id="unit"></td>
+                    </tr>
+                   
+                </table>
+            </fieldset>
+        </div>
+        <div>
+            <fieldset>
+                <legend>Energi</legend>
+                <table style="width:100%">
+                    <tr>
+                        <td id="variable">Elforbrug</td>
+                        <td id="value">--</td>
+                        <td id="unit"></td>
+                    </tr>
+                    
+                </table>
+            </fieldset>
+        </div>
+
+        <div>
+            <fieldset>
+                <legend>Ledigepladser</legend>
+                
+                    <table style="width:100%">
+                        <tr>
+                            <td id="variable">Antal</td>
+                            <td id="value">--</td>
+                            <td id="unit"></td>
+                        </tr>
+                    </table>
+            </fieldset>
+        </div>
+    </div>
+    
+    <!--div style="position:absolute;left:50px; top:1000px;z-index:-1; width:600px; font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;font-size:xx-large;">
+        <a href="#" onclick="GoToPreviousZone(); return false;">
+            <img src="Previous.svg" style="height:50px;width:50px;margin-left:10px" />
+            <b style="font-size:50px;color:#990000;position:absolute;top:-20px;left:70px" id="previousZone">ZONE 10</b>
+        </a>
+    </div>-->
+
+
+    <!--div style="position:absolute;left:1820px;top:1000px;z-index:-1; width:50px; font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;font-size:xx-large;">
+        <a href="#" onclick="GoToNextZone(); return false;">
+            <b style="font-size:50px;color:#990000;position:absolute;top:-20px;left:-275px" id="nextZone">ZONE 2</b>
+            <img src="Next.svg" style="height:50px;width:50px;" />
+        </a>
+    </div>-->
+
+    <div style="position:absolute;top:980px;left: 760px;z-index:-1;width:200px;height:80px; font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;font-size:xx-large;text-align:center">
+        <a  href="#" onclick="GoToFloorPlan();return false;" style="text-decoration:none">
+            <b style="font-size:50px;color:#990000;">FLOORPLAN</b>
+        </a>
+    </div>
