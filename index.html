@@ -44,11 +44,28 @@
    
    <script>
        $.get('data.csv', function (csvFile) {
- //         var data = parseCSVData(csvFile);
-          console.log(csvFile)
+          var data = parseCSVData(csvFile);
+          console.log(data)
 
        })
       
+       function parseCSVData(csvFile){
+           var data = [];
+           var lines = csvFile.split("\n");
+           $.each(lines, function(lineNumber,line){
+               if(lineNumber != 0) {//skip header line
+
+                var fields = line.split(",");
+                if(fields.length == 4){ //skip invalid lines
+                    var timestamp = Date.parse(fields[1]);
+                    var value = parseInt(fields[3]);
+                    data.push([timestamp,value]);
+                }
+               }
+           });
+           // reverse array Highcharts expected the data to be sorted in ascend order
+           return data.reverse();
+       }
    </script>
   </body>
 </html>
