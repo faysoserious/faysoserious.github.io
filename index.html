@@ -59,8 +59,9 @@
                 if(fields.length == 4){ //skip invalid lines
              //       var timestamp = Date(fields[1]);
                     var floorzone = parseInt(fields[0]);
+                    var type = fields[2];
                     var value = parseInt(fields[3]);
-                    data.push([floorzone,value]);
+                    data.push([floorzone,value,type]);
                 }
                }
            });
