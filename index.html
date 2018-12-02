@@ -44,27 +44,11 @@
    
    <script>
        $.get('data.csv', function (csvFile) {
-          // var data = parseCSVData(csvFile);
+          var data = parseCSVData(csvFile);
           console.log(data)
 
        })
-       Highcharts.chart('container1', {
-    chart: {
-        type: 'column'
-    },
-    data: {
-        // enablePolling: true,
-        csvURL: window.location.origin + 'data.csv'
-    },
-    title: {
-        text: 'Fruit Consumption'
-    },
-    yAxis: {
-        title: {
-            text: 'Units'
-        }
-    }
-});
+      
    </script>
   </body>
 </html>
