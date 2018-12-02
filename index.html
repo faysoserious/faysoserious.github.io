@@ -57,7 +57,8 @@
 
                 var fields = line.split(",");
                 if(fields.length == 4){ //skip invalid lines
-                    var timestamp = Date(fields[1]);
+             //       var timestamp = Date(fields[1]);
+                    var floorzone = parseInt(fields[0]);
                     var value = parseInt(fields[3]);
                     data.push([timestamp,value]);
                 }
