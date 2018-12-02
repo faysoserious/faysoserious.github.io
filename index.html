@@ -61,7 +61,8 @@
                     var floorzone = parseInt(fields[0]);
                     var type = fields[2];
                     var value = parseInt(fields[3]);
-                    data.push([floorzone,value,type]);
+                    var timestamp = Date.parse(fields[1]);
+                    data.push([floorzone,value,type, timestamp]);
                 }
                }
            });
