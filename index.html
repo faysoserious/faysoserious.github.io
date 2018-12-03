@@ -49,15 +49,34 @@
          
         //  console.log(data[2]);
         var step;
+        var humidity = [];
+        var sound = [];
+        var light = [];
+        var temperature = [];
         for (step = 0; step < data.length; step++) {
         // Runs 5 times, with values of step 0 through 4.
             if(data[step][2]=="Humidity"){
-                console.log(data[step]);
-
+                humidity.push(data[step]);
+                
+            }
+            if(data[step][2]=="Sound"){
+                sound.push(data[step]);
+                
+            }
+            if(data[step][2]=="Temperature"){
+                temperature.push(data[step]);
+                
+            }
+            if(data[step][2]=="Light"){
+                light.push(data[step]);
+                
             }
             
         }
-
+        console.log(sound);
+        console.log(humidity);
+        console.log(temperature);
+        console.log(light);
           // create the chart
           Highcharts.chart('container1', {
                 
