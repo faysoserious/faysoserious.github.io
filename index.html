@@ -46,7 +46,17 @@
        $.get('data.csv', function (csvFile) {
           var data = parseCSVData(csvFile);
          // console.log(data);
-          console.log(data[2]);
+         
+        //  console.log(data[2]);
+        var step;
+        for (step = 0; step < data.length; step++) {
+        // Runs 5 times, with values of step 0 through 4.
+            if(data[step][2]=="Humidity"){
+                console.log(data[step]);
+
+            }
+            
+        }
 
           // create the chart
           Highcharts.chart('container1', {
