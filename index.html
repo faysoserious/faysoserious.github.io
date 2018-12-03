@@ -55,19 +55,19 @@
         var temperature = [];
         for (step = 0; step < data.length; step++) {
         // Runs 5 times, with values of step 0 through 4.
-            if(data[step][2]=="Humidity"){
+            if(data[step][3]=="Humidity"){
                 humidity.push(data[step]);
                 
             }
-            if(data[step][2]=="Sound"){
+            if(data[step][3]=="Sound"){
                 sound.push(data[step]);
                 
             }
-            if(data[step][2]=="Temperature"){
+            if(data[step][3]=="Temperature"){
                 temperature.push(data[step]);
                 
             }
-            if(data[step][2]=="Light"){
+            if(data[step][3]=="Light"){
                 light.push(data[step]);
                 
             }
@@ -157,13 +157,14 @@
                if(lineNumber != 0) {//skip header line
 
                 var fields = line.split(",");
-                if(fields.length == 4){ //skip invalid lines
+                if(fields.length == 5){ //skip invalid lines
              //       var timestamp = Date(fields[1]);
-                    var floorzone = parseInt(fields[0]);
-                    var type = fields[2];
-                    var value = parseInt(fields[3]);
-                    var timestamp = Date.parse(fields[1]);
-                    data.push([floorzone,value,type, timestamp]);
+                    var floor = parseInt(fields[0]);
+                    var zone = parseInt(fields[1]);
+                    var type = fields[3];
+                    var value = parseInt(fields[4]);
+                    var timestamp = Date.parse(fields[2]);
+                    data.push([floor,zone,value,type, timestamp]);
                 }
                }
            });
