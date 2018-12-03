@@ -48,11 +48,8 @@
           console.log(data);
           console.log(data[data[2]=="Humidity"]);
           // create the chart
-          $('#googleStockchart').Highcharts.chart('container1', {
-                rangeSelector: {
-                    selected: 1,
-                    inputEnabled: $('#googleStockchart').width()>480
-                },
+          Highcharts.chart('container1', {
+                
                 
                 chart: {
                     type: 'scatter',
