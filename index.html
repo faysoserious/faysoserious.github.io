@@ -46,7 +46,7 @@
        $.get('data.csv', function (csvFile) {
           var data = parseCSVData(csvFile);
           console.log(data);
-          console.log(data["type"=="Humidity"]);
+          console.log(data[data[2]=="Humidity"]);
           // create the chart
           $('#googleStockchart').Highcharts.chart('container1', {
                 rangeSelector: {
