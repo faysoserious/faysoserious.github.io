@@ -45,16 +45,17 @@
    </script-->
    
    <script>
+        var humidity = [];
+        var sound = [];
+        var light = [];
+        var temperature = [];
        $.get('data.csv', function (csvFile) {
           var data = parseCSVData(csvFile);
          // console.log(data);
          
         //  console.log(data[2]);
         var step;
-        var humidity = [];
-        var sound = [];
-        var light = [];
-        var temperature = [];
+        
         for (step = 0; step < data.length; step++) {
         // Runs 5 times, with values of step 0 through 4.
             if(data[step][3]=="Humidity"){
@@ -79,6 +80,12 @@
         console.log(humidity);
         console.log(temperature);
         console.log(light);
+        // sort by value
+        humidity.sort(function (a, b) {
+            return a[3] - b[3];
+            
+        });
+        console.log(humidity);
           // create the container1
           Highcharts.chart('container1', {
                 
