@@ -17,6 +17,7 @@
     <script src="https://code.highcharts.com/modules/export-data.js"></script>
     <script src="https://code.highcharts.com/modules/data.js"></script>
     <script src="https://code.highcharts.com/highcharts-more.js"></script>
+    <script src="https://code.highcharts.com/modules/heatmap.js"></script>
     <title>Hello, world!</title>
   </head>
   <body>
@@ -221,7 +222,7 @@ plotOptions: {
     series: {
         dataLabels: {
             enabled: true,
-            format: '{point.name}'
+            format: '{point.z}'
         }
     }
 },
@@ -233,6 +234,74 @@ series: [{
 });
  // ---------end create the chart container1----------------
 
+
+
+//-------------create the chart container2-------------
+var floor =0;
+var Temperature0;
+        Temperature0 =gettfloor(floor,temperature);
+        console.log(Temperature0);
+Highcharts.chart('container2', {
+
+chart: {
+    type: 'heatmap',
+    marginTop: 40,
+    marginBottom: 80,
+    plotBorderWidth: 1
+},
+
+
+title: {
+    text: 'Temperature'
+},
+
+xAxis: {
+    min: 0,
+    max: 3,
+    title:'Ground floor',
+    categories: ['A', 'B', 'C', 'D']
+},
+
+yAxis: {
+    categories: ['1', '2'],
+    title: null
+},
+
+colorAxis: {
+    min: 20,
+    max: 25,
+   // minColor: '#FFFFFF',
+    maxColor: Highcharts.getOptions().colors[0]
+},
+
+legend: {
+    align: 'right',
+    layout: 'vertical',
+    margin: 0,
+    verticalAlign: 'top',
+    y: 25,
+    symbolHeight: 280
+},
+
+tooltip: {
+    formatter: function () {
+        return 'Zone <b>' + this.point.Zone + '</b>' +
+             '<b> Temperature </b>'+ this.point.value ;
+    }
+},
+
+series: [{
+    
+    data: Temperature0,
+    dataLabels: {
+        enabled: true,
+        color: '#000000',
+        format: '{point.value}'
+    }
+}]
+
+});
+//------------end create the chart container2---------------
   
 
 //------------------------------------------
@@ -414,6 +483,25 @@ series: [{
         for (step=0,len=humidity.length;step<len;step++){
                 if(humidity[step][0]==floor){
                     hfloor.push({x:humidity[step][5],y:humidity[step][6],z:humidity[step][2],floor:humidity[step][0],zone:humidity[step][1]});}
+                
+        }
+        
+            return hfloor.reverse();
+       }
+
+       function gettfloor(floor,humidity){
+           var hfloor=[];
+           
+        for (step=0,len=humidity.length;step<len;step++){
+                if(humidity[step][0]==floor){
+                    if(humidity[step][1]<=4){
+                        hfloor.push({x:(humidity[step][1]-1),y:1,value:humidity[step][2], Zone:humidity[step][1]});
+                    }
+                    if(humidity[step][1]>4){
+                        hfloor.push({x:(8-humidity[step][1]),y:0,value:humidity[step][2],Zone:humidity[step][1]});
+                    }
+                }
+                   // hfloor.push({x:humidity[step][5],y:humidity[step][6],z:humidity[step][2],floor:humidity[step][0],zone:humidity[step][1]});}
                 
         }
         
