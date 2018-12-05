@@ -34,8 +34,18 @@
                       <div id = "zone1"><p>Zone 1</p></div>
                   </div>
               </div>
+              <div class="col-sm-6 col-md-6">
+                <div id = "container4"></div>
+              </div>
+                <div class="col-sm-6 col-md-6">
+                    <div id = "container5"></div>
+                </div>
+                <div class="col-sm-6 col-md-6">
+                    <div id = "container6"></div>
+                </div>
+            </div>
 
-          </div>
+         
       </div>
       
 <!--loading data from api-->
@@ -58,6 +68,14 @@
         var sound = [];
         var light = [];
         var temperature = [];
+        var Temperature0;
+        var floor =0;
+        var sound0;
+        var sound1;
+        var sound2;
+       
+   
+    
        $.get('data.csv', function (csvFile) {
           var data = parseCSVData(csvFile);
           console.log(data);
@@ -87,13 +105,18 @@
             }
             
         }
-       // console.log(sound);
-        console.log(humidity);
+        console.log(sound);
+        //console.log(humidity);
        // console.log(temperature);
        // console.log(light);
         // sort by value
         
-        humidity.sort(function (a, b) {
+       /* humidity.sort(function (a, b) {
+            
+            return a[0] - b[0];
+            
+        });*/
+        sound.sort(function (a, b) {
             
             return a[0] - b[0];
             
@@ -237,10 +260,10 @@ series: [{
 
 
 //-------------create the chart container2-------------
-var floor =0;
-var Temperature0;
-        Temperature0 =gettfloor(floor,temperature);
-        console.log(Temperature0);
+
+
+sound2 =gettfloor(2,sound);
+console.log(sound2);
 Highcharts.chart('container2', {
 
 chart: {
@@ -252,24 +275,25 @@ chart: {
 
 
 title: {
-    text: 'Temperature'
+    text: 'Sound level of 2nd floor'
 },
 
 xAxis: {
     min: 0,
     max: 3,
     title:'Ground floor',
-    categories: ['A', 'B', 'C', 'D']
+    categories: ['A', 'B', 'C', 'D'],
+    lables: {enabled:false}
 },
 
 yAxis: {
-    categories: ['1', '2'],
+    categories: ['1', '2','3'],
     title: null
 },
 
 colorAxis: {
-    min: 20,
-    max: 25,
+    min: 150,
+    max: 350,
    // minColor: '#FFFFFF',
     maxColor: Highcharts.getOptions().colors[0]
 },
@@ -292,16 +316,84 @@ tooltip: {
 
 series: [{
     
-    data: Temperature0,
+    data: sound2,
     dataLabels: {
         enabled: true,
         color: '#000000',
-        format: '{point.value}'
+        format: 'Zone {point.Zone}'
     }
 }]
 
 });
 //------------end create the chart container2---------------
+
+//-------------create the sound chart of floor1-------------
+
+
+sound1 =gettfloor(1,sound);
+console.log(sound1);
+Highcharts.chart('container6', {
+
+chart: {
+    type: 'heatmap',
+    marginTop: 40,
+    marginBottom: 80,
+    plotBorderWidth: 1
+},
+
+
+title: {
+    text: 'Sound level of 1st floor'
+},
+
+xAxis: {
+    min: 0,
+    max: 3,
+    title:'Ground floor',
+    categories: ['A', 'B', 'C', 'D']
+},
+
+yAxis: {
+    categories: ['1', '2','3'],
+    title: null,
+    lable:null
+},
+
+colorAxis: {
+    min: 150,
+    max: 350,
+   // minColor: '#FFFFFF',
+    maxColor: Highcharts.getOptions().colors[0]
+},
+
+legend: {
+    align: 'right',
+    layout: 'vertical',
+    margin: 0,
+    verticalAlign: 'top',
+    y: 25,
+    symbolHeight: 280
+},
+
+tooltip: {
+    formatter: function () {
+        return 'Zone <b>' + this.point.Zone + '</b>' +
+             '<b> Temperature </b>'+ this.point.value ;
+    }
+},
+
+series: [{
+    
+    data: sound1,
+    dataLabels: {
+        enabled: true,
+        color: '#000000',
+        format: 'Zone {point.Zone}'
+    }
+}]
+
+});
+//------------end create the sound chart of floor1---------------
   
 
 //------------------------------------------
@@ -309,7 +401,7 @@ series: [{
         var floor =0;
         var humidity0;
         humidity0 =getfloor(floor,humidity);
-        console.log(humidity0);
+        //console.log(humidity0);
         
         // create the container3
         Highcharts.chart('container3', {
@@ -441,9 +533,77 @@ series: [{
         });
           // end create the chart container3
 
+// ----------------create the chart container4-----------------
+sound0 =gettfloor(0,sound);
+console.log(sound0);
+
+Highcharts.chart('container4', {
+
+chart: {
+    type: 'heatmap',
+    marginTop: 40,
+    marginBottom: 80,
+    plotBorderWidth: 1
+},
+
+
+title: {
+    text: 'Sound level'
+},
+
+xAxis: {
+    min: 0,
+    max: 3,
+    title:'Ground floor',
+    categories: ['A', 'B', 'C', 'D']
+},
+
+yAxis: {
+    categories: ['1', '2'],
+    title: null
+},
+
+colorAxis: {
+    min: 150,
+    max: 350,
+   // minColor: '#FFFFFF',
+    maxColor: Highcharts.getOptions().colors[0]
+},
+
+legend: {
+    align: 'right',
+    layout: 'vertical',
+    margin: 0,
+    verticalAlign: 'top',
+    y: 25,
+    symbolHeight: 280
+},
+
+tooltip: {
+    formatter: function () {
+        return 'Zone <b>' + this.point.Zone + '</b>' +
+             '<b> Temperature </b>'+ this.point.value ;
+    }
+},
+
+series: [{
+    
+    data: sound0,
+    dataLabels: {
+        enabled: true,
+        color: '#000000',
+        format: '{point.value}'
+    }
+}]
+
+});
+// ----------------end create the chart container4-----------------
+
 //------------------------------------------
 
        })
+
+
 
     
       
@@ -493,6 +653,7 @@ series: [{
            var hfloor=[];
            
         for (step=0,len=humidity.length;step<len;step++){
+            if(floor ==0){
                 if(humidity[step][0]==floor){
                     if(humidity[step][1]<=4){
                         hfloor.push({x:(humidity[step][1]-1),y:1,value:humidity[step][2], Zone:humidity[step][1]});
@@ -501,9 +662,47 @@ series: [{
                         hfloor.push({x:(8-humidity[step][1]),y:0,value:humidity[step][2],Zone:humidity[step][1]});
                     }
                 }
+            }
+            if(floor ==1){
+                if(humidity[step][0]==floor){
+                    if(humidity[step][1]<=4){
+                        hfloor.push({x:(humidity[step][1]-1),y:2,value:humidity[step][2], Zone:humidity[step][1]});
+                    }
+                    if(humidity[step][1]==5){
+                        hfloor.push({x:3,y:1,value:humidity[step][2],Zone:humidity[step][1]});
+                    }
+                    if(humidity[step][1]==10){
+                        hfloor.push({x:0,y:1,value:humidity[step][2],Zone:humidity[step][1]});
+                    }
+                    if(humidity[step][1]>5&humidity[step][1]<10){
+                        hfloor.push({x:(9-humidity[step][1]),y:0,value:humidity[step][2],Zone:humidity[step][1]});
+                    }
+                }
+            }
+            if(floor ==2){
+                if(humidity[step][0]==floor){
+                    if(humidity[step][1]<=4){
+                        hfloor.push({x:(humidity[step][1]-1),y:2,value:humidity[step][2], Zone:humidity[step][1]});
+                    }
+                    if(humidity[step][1]==5){
+                        hfloor.push({x:3,y:1,value:humidity[step][2],Zone:humidity[step][1]});
+                    }
+                    if(humidity[step][1]==8){
+                        hfloor.push({x:0,y:1,value:humidity[step][2],Zone:humidity[step][1]});
+                    }
+                    if(humidity[step][1]==6){
+                        hfloor.push({x:3,y:0,value:humidity[step][2],Zone:humidity[step][1]});
+                    }
+                    if(humidity[step][1]==7){
+                        hfloor.push({x:2,y:0,value:humidity[step][2],Zone:humidity[step][1]});
+                        hfloor.push({x:1,y:0,value:humidity[step][2],Zone:humidity[step][1]});
+                        hfloor.push({x:0,y:0,value:humidity[step][2],Zone:humidity[step][1]});
+                    }
+                }
+            }
                    // hfloor.push({x:humidity[step][5],y:humidity[step][6],z:humidity[step][2],floor:humidity[step][0],zone:humidity[step][1]});}
                 
-        }
+        };
         
             return hfloor.reverse();
        }
