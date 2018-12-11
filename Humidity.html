@@ -1,0 +1,708 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://code.highcharts.com/highcharts.js"></script>
+    <script src="https://code.highcharts.com/modules/series-label.js"></script>
+    <script src="https://code.highcharts.com/modules/exporting.js"></script>
+    <script src="https://code.highcharts.com/modules/export-data.js"></script>
+    <script src="https://code.highcharts.com/modules/data.js"></script>
+    <script src="https://code.highcharts.com/highcharts-more.js"></script>
+    <script src="https://code.highcharts.com/modules/heatmap.js"></script>
+    <title>Hello, world!</title>
+  </head>
+  <body>
+      <div class="container">
+            <div class="container">
+                    <div class="btn-group" role="group" aria-label="Basic example">
+                            <button type="button" class="btn btn-secondary"><a href="index.html">Sound</a></button>
+                            <button type="button" class="btn btn-secondary"><a href="temperature.html">Temperature</a></button>
+                            <button type="button" class="btn btn-secondary"><a href="Humidity.html">Humidity</a></button>
+                            <button type="button" class="btn btn-secondary"><a href="light.html">light</a></button>
+                            <button type="button" class="btn btn-secondary"><a href="eachzone.html">Zones</a></button>
+
+                          </div>
+          <div class="row">
+              <div class="col-sm-6 col-md-6">
+                  <div id="container1"></div>
+                  
+              </div>
+              <div class="col-sm-6 col-md-6">
+                  <div id = "container2"></div>
+              </div>
+              <div class="col-sm-6 col-md-6">
+                  <div id = "container3">
+                      <div id = "zone1"><p>Zone 1</p></div>
+                  </div>
+              </div>
+              <div class="col-sm-6 col-md-6">
+                <div id = "container4"></div>
+              </div>
+                <div class="col-sm-6 col-md-6">
+                    <div id = "container5"></div>
+                </div>
+                <div class="col-sm-6 col-md-6">
+                    <div id = "container6"></div>
+                </div>
+            </div>
+
+         
+      </div>
+      
+<!--loading data from api-->
+   <!--script type="text/javascript">
+
+        fetch('https://scadadataapi.azurewebsites.net/api/values')
+        .then(function(response) {
+            return response.json();
+         })
+        .then(function(myJson) {
+            console.log(JSON.stringify(myJson));
+        });
+   </script-->
+   
+   <script>
+        var humidity = []
+        var humidity0 = [];
+        var humidity1 = [];
+        var humidity2 = [];
+
+       
+   
+    
+       $.get('data.csv', function (csvFile) {
+          var data = parseCSVData(csvFile);
+          console.log(data);
+         
+        //  console.log(data[2]);
+        var step;
+        var len;
+        
+        for (step = 0,len = data.length; step < len; step++) {
+        // Runs 5 times, with values of step 0 through 4.
+            if(data[step][3]=="Humidity"){
+                humidity.push(data[step]);
+                
+                
+            }
+          
+            
+        }
+        console.log(humidity);
+        //console.log(humidity);
+       // console.log(temperature);
+       // console.log(light);
+        // sort by value
+        
+       /* humidity.sort(function (a, b) {
+            
+            return a[0] - b[0];
+            
+        });*/
+        humidity.sort(function (a, b) {
+            
+            return a[2] - b[2];
+            
+        });
+
+/*      for (step=0; step<humidity.length;step++){
+           // humidity[step][0]=humidity[step][0]*10;
+            humidity[step][1]=humidity[step][1]+20;
+        }
+*/       var floor =2; 
+         
+         humidity2 =gettfloor(floor,humidity);
+         floor =0;
+        humidity0 =gettfloor(floor,humidity);
+        floor =1;
+        humidity1 =gettfloor(floor,humidity);
+//------------- create the second floor-------------------------------
+          Highcharts.chart('container1', {
+
+chart: {
+    type: 'bubble',
+    plotBorderWidth: 1,
+    zoomType: 'xy'
+},
+
+legend: {
+    enabled: false
+},
+
+title: {
+    text: 'Humidity of second floor'
+},
+
+subtitle: {
+    text: 'Source: <a href="https://scadadataapi.azurewebsites.net/api/values">DTU smart library</a> '
+},
+
+xAxis: {
+    
+    gridLineWidth: 1,
+    min:0.0,
+    max:40,
+    tickAmount: 5,
+    
+    title: {
+        //enabled:false
+        text:'Ground Floor'
+    },
+    labels: {enabled:false}
+
+    
+   /* plotBands: [{
+        from: 0,
+        to: 1,
+        color: '#DDDDDD'
+    }, {
+        from: 1,
+        to: 2,
+        color: '#DDDDDD'
+    }, {
+        from: 2,
+        to: 3,
+        color: "#DDDDDD"
+    }, {
+        from: 3,
+        to: 4,
+        color: "#DDDDDD"
+    }]*/
+},
+
+yAxis: {
+
+    tickAmount: 4,
+    min :0,
+    max : 120,
+    
+    title: {
+        enabled :false
+    },
+    labels: {
+        enabled:false
+    },
+    
+   
+    
+},
+
+tooltip: {
+    useHTML: true,
+    headerFormat: '<table>',
+    pointFormat: '<tr><th colspan="2"></th></tr>' +
+    '<tr><th>Floor:</th><td>Secondfloor</td></tr>'+
+    '<tr><th>Zone:</th><td>{point.Zone}</td></tr>' +
+    '<tr><th>Humidity(%):</th><td>{point.z}%</td></tr>',
+    footerFormat: '</table>',
+    followPointer: true
+},
+
+plotOptions: {
+    series: {
+        dataLabels: {
+            enabled: true,
+            format: 'Zone {point.Zone}'
+        }
+    }
+},
+
+series: [{
+    data: humidity2
+},]
+
+});
+ // ---------end create the chart container1----------------
+
+
+//-------------create the first floor-------------------------
+Highcharts.chart('container2', {
+
+chart: {
+    type: 'bubble',
+    plotBorderWidth: 1,
+    zoomType: 'xy'
+},
+
+legend: {
+    enabled: false
+},
+
+title: {
+    text: 'Humidity of first floor'
+},
+
+subtitle: {
+    text: 'Source: <a href="https://scadadataapi.azurewebsites.net/api/values">DTU smart library</a> '
+},
+
+xAxis: {
+    
+    gridLineWidth: 1,
+    min:0.0,
+    max:40,
+    tickAmount: 5,
+    
+    title: {
+        //enabled:false
+        text:'First Floor'
+    },
+    labels: {enabled:false}
+
+    
+   /* plotBands: [{
+        from: 0,
+        to: 1,
+        color: '#DDDDDD'
+    }, {
+        from: 1,
+        to: 2,
+        color: '#DDDDDD'
+    }, {
+        from: 2,
+        to: 3,
+        color: "#DDDDDD"
+    }, {
+        from: 3,
+        to: 4,
+        color: "#DDDDDD"
+    }]*/
+},
+
+yAxis: {
+
+    tickAmount: 4,
+    min :0,
+    max : 120,
+    
+    title: {
+        enabled :false
+    },
+    labels: {
+        enabled:false
+    },
+    
+   
+    
+},
+
+tooltip: {
+    useHTML: true,
+    headerFormat: '<table>',
+    pointFormat: '<tr><th colspan="2"></th></tr>' +
+    '<tr><th>Floor:</th><td>Firstfloor</td></tr>'+
+    '<tr><th>Zone:</th><td>{point.Zone}</td></tr>' +
+    '<tr><th>Humidity(%):</th><td>{point.z}%</td></tr>',
+    footerFormat: '</table>',
+    followPointer: true
+},
+
+plotOptions: {
+    series: {
+        dataLabels: {
+            enabled: true,
+            format: 'Zone {point.Zone}'
+        }
+    }
+},
+
+series: [{
+    data: humidity1
+},]
+
+});
+//------------------end first floor-----------------------------
+
+
+
+  
+
+//-------------ground floor-----------------------------
+
+        
+        //console.log(humidity0);
+        
+        // create the container3
+        Highcharts.chart('container3', {
+
+        chart: {
+            type: 'bubble',
+            plotBorderWidth: 1,
+            zoomType: 'xy'
+        },
+
+        legend: {
+            enabled: false
+        },
+
+        title: {
+            text: 'Humidity of Ground floor'
+        },
+
+        subtitle: {
+            text: 'Source: <a href="https://scadadataapi.azurewebsites.net/api/values">DTU smart library</a> '
+        },
+
+        xAxis: {
+            
+            gridLineWidth: 1,
+            min:0.0,
+            max:40,
+            tickAmount: 5,
+            
+            title: {
+                //enabled:false
+                text:'Ground Floor'
+            },
+            labels: {enabled:false}
+
+            
+           /* plotBands: [{
+                from: 0,
+                to: 1,
+                color: '#DDDDDD'
+            }, {
+                from: 1,
+                to: 2,
+                color: '#DDDDDD'
+            }, {
+                from: 2,
+                to: 3,
+                color: "#DDDDDD"
+            }, {
+                from: 3,
+                to: 4,
+                color: "#DDDDDD"
+            }]*/
+        },
+
+        yAxis: {
+
+            tickAmount: 3,
+            min :0,
+            max : 80,
+            
+            title: {
+                enabled :false
+            },
+            labels: {
+                enabled:false
+            },
+            
+           
+            
+        },
+
+        tooltip: {
+            useHTML: true,
+            headerFormat: '<table>',
+            pointFormat: '<tr><th colspan="2"></th></tr>' +
+            '<tr><th>Floor:</th><td>Groundfloor</td></tr>'+
+            '<tr><th>Zone:</th><td>{point.Zone}</td></tr>' +
+            '<tr><th>Humidity(%):</th><td>{point.z}%</td></tr>',
+            footerFormat: '</table>',
+            followPointer: true
+        },
+
+        plotOptions: {
+            series: {
+                dataLabels: {
+                    enabled: true,
+                    format: 'Zone {point.Zone}'
+                }
+            }
+        },
+
+        series: [{
+            data: humidity0
+        },]
+
+        });
+          // end create the chart container3
+
+
+
+//--------------end ground floor----------------------------
+var value;
+value = donutvalue(0,humidity);
+var loc = donutloc(0,humidity);
+var allin = []
+console.log(value)
+console.log(loc)
+for(var n=0,len = value.length;n<len;n++){
+  allin.push({ type: 'pie',
+                name : 'pies',
+              data: value[n], 
+              center: loc[n],
+              size: '60%',
+                innerSize: '20%',
+                showInLegend:true,
+                dataLabels: {
+                    enabled: false
+                }});
+}
+console.log(allin)
+//---------------------------------------
+
+//-------------------------------------
+
+       })
+
+
+
+    
+      
+       function parseCSVData(csvFile){
+           var data = [];
+           var lines = csvFile.split("\n");
+           $.each(lines, function(lineNumber,line){
+               if(lineNumber != 0) {//skip header line
+
+                var fields = line.split(",");
+                if(fields.length == 7){ //skip invalid lines
+             //       var timestamp = Date(fields[1]);
+                    var floor = parseInt(fields[0]);
+                    var zone = parseInt(fields[1]);
+                    var type = fields[3];
+                    var value = parseFloat(fields[4]);
+                    var time = Date.parse(fields[2])
+                    var plotx = parseInt(fields[5]);
+                    var ploty = parseInt(fields[6]);
+                    data.push([floor,zone,value,type, time,plotx,ploty]);
+                }
+               }
+           });
+           // reverse array Highcharts expected the data to be sorted in ascend order
+           return data.reverse();
+       }
+
+       function position(humidity){
+
+           return (humidity[2]+50);
+
+       }
+
+       function getfloor(floor,humidity){
+           var hfloor=[];
+           
+        for (step=0,len=humidity.length;step<len;step++){
+                if(humidity[step][0]==floor){
+                    hfloor.push({x:humidity[step][5],y:humidity[step][6],z:humidity[step][2],floor:humidity[step][0],zone:humidity[step][1]});}
+                
+        }
+        
+            return hfloor.reverse();
+       }
+
+       function gettfloor(floor,humidity){
+           var hfloor=[];
+           
+        for (step=0,len=humidity.length;step<len;step++){
+            if(floor ==0){
+                if(humidity[step][0]==floor){
+                    if(humidity[step][1]<=4){
+                        hfloor.push({x:((humidity[step][1])*10-5),y:60,z:humidity[step][2], Zone:humidity[step][1]},);
+                    }
+                    if(humidity[step][1]>4){
+                        hfloor.push({x:(85-10*humidity[step][1]),y:20,z:humidity[step][2],Zone:humidity[step][1]});
+                    }
+                }
+            }
+            if(floor ==1){
+                if(humidity[step][0]==floor){
+                    if(humidity[step][1]<=4){
+                        hfloor.push({x:((humidity[step][1])*10-5),y:100,z:humidity[step][2], Zone:humidity[step][1]});
+                    }
+                    if(humidity[step][1]==5){
+                        hfloor.push({x:35,y:60,z:humidity[step][2],Zone:humidity[step][1]});
+                    }
+                    if(humidity[step][1]==10){
+                        hfloor.push({x:5,y:60,z:humidity[step][2],Zone:humidity[step][1]});
+                    }
+                    if(humidity[step][1]>5&humidity[step][1]<10){
+                        hfloor.push({x:(85-10*humidity[step][1]),y:20,z:humidity[step][2],Zone:humidity[step][1]});
+                    }
+                }
+            }
+            if(floor ==2){
+                if(humidity[step][0]==floor){
+                    if(humidity[step][1]<=4){
+                        hfloor.push({x:(humidity[step][1]*10-5),y:100,z:humidity[step][2], Zone:humidity[step][1]});
+                    }
+                    if(humidity[step][1]==5){
+                        hfloor.push({x:35,y:60,z:humidity[step][2],Zone:humidity[step][1]});
+                    }
+                    if(humidity[step][1]==8){
+                        hfloor.push({x:5,y:60,z:humidity[step][2],Zone:humidity[step][1]});
+                    }
+                    if(humidity[step][1]==6){
+                        hfloor.push({x:35,y:20,z:humidity[step][2],Zone:humidity[step][1]});
+                    }
+                    if(humidity[step][1]==7){
+                        hfloor.push({x:25,y:20,z:humidity[step][2],Zone:humidity[step][1]});
+                        hfloor.push({x:15,y:20,z:humidity[step][2],Zone:humidity[step][1]});
+                        hfloor.push({x:5,y:20,z:humidity[step][2],Zone:humidity[step][1]});
+                    }
+                }
+            }
+                   // hfloor.push({x:humidity[step][5],y:humidity[step][6],z:humidity[step][2],floor:humidity[step][0],zone:humidity[step][1]});}
+                
+        };
+        
+            return hfloor.reverse();
+       }
+
+       function donutvalue(floor,humidity){
+           var hfloor=[];
+           var location=[];
+           
+        for (step=0,len=humidity.length;step<len;step++){
+            if(floor ==0){
+                if(humidity[step][0]==floor){
+                    if(humidity[step][1]<=4){
+ //                       hfloor.push({name:humidity[step][1], y:humidity[step][2], color:Highcharts.getOptions().colors[0]});
+ //                       hfloor.push({name:"", y:(100-humidity[step][2]), color:"lightgrey"});
+                      hfloor.push([humidity[step][1],humidity[step][2]]);
+                      hfloor.push("", (humidity[step][1])*10-5);
+
+                        location.push([((humidity[step][1])*10-5),60])
+                        location.push([((humidity[step][1])*10-5),60])
+                    }
+                    if(humidity[step][1]>4){
+                      hfloor.push(humidity[step][1], humidity[step][2]);
+                        hfloor.push("", 100-humidity[step][2]);
+
+                        
+                        location.push([(85-(humidity[step][1])*10),20]);
+                        location.push([(85-(humidity[step][1])*10),20])
+                    }
+                }
+            }
+            if(floor ==1){
+                if(humidity[step][0]==floor){
+                    if(humidity[step][1]<=4){
+                        hfloor.push({x:((humidity[step][1])*10-5),y:100,z:humidity[step][2], Zone:humidity[step][1]});
+                    }
+                    if(humidity[step][1]==5){
+                        hfloor.push({x:35,y:60,z:humidity[step][2],Zone:humidity[step][1]});
+                    }
+                    if(humidity[step][1]==10){
+                        hfloor.push({x:5,y:60,z:humidity[step][2],Zone:humidity[step][1]});
+                    }
+                    if(humidity[step][1]>5&humidity[step][1]<10){
+                        hfloor.push({x:(85-10*humidity[step][1]),y:20,z:humidity[step][2],Zone:humidity[step][1]});
+                    }
+                }
+            }
+            if(floor ==2){
+                if(humidity[step][0]==floor){
+                    if(humidity[step][1]<=4){
+                        hfloor.push({x:(humidity[step][1]*10-5),y:100,z:humidity[step][2], Zone:humidity[step][1]});
+                    }
+                    if(humidity[step][1]==5){
+                        hfloor.push({x:35,y:60,z:humidity[step][2],Zone:humidity[step][1]});
+                    }
+                    if(humidity[step][1]==8){
+                        hfloor.push({x:5,y:60,z:humidity[step][2],Zone:humidity[step][1]});
+                    }
+                    if(humidity[step][1]==6){
+                        hfloor.push({x:35,y:20,z:humidity[step][2],Zone:humidity[step][1]});
+                    }
+                    if(humidity[step][1]==7){
+                        hfloor.push({x:25,y:20,z:humidity[step][2],Zone:humidity[step][1]});
+                        hfloor.push({x:15,y:20,z:humidity[step][2],Zone:humidity[step][1]});
+                        hfloor.push({x:5,y:20,z:humidity[step][2],Zone:humidity[step][1]});
+                    }
+                }
+            }
+                   // hfloor.push({x:humidity[step][5],y:humidity[step][6],z:humidity[step][2],floor:humidity[step][0],zone:humidity[step][1]});}
+                
+        };
+        
+            return hfloor.reverse();
+       }
+
+       function donutloc(floor,humidity){
+           var hfloor=[];
+           var location=[];
+           
+        for (step=0,len=humidity.length;step<len;step++){
+            if(floor ==0){
+                if(humidity[step][0]==floor){
+                    if(humidity[step][1]<=4){
+                      hfloor.push(humidity[step][1],humidity[step][2]);
+                      hfloor.push("", (humidity[step][1])*10-5);
+ //                       hfloor.push({name:humidity[step][1], y:humidity[step][2], color:Highcharts.getOptions().colors[0]});
+ //                       hfloor.push({name:"", y:(100-humidity[step][2]), color:"gray"});
+
+                        location.push([((humidity[step][1])*10-5),60]);
+                        location.push([((humidity[step][1])*10-5),60]);
+                    }
+                    if(humidity[step][1]>4){
+                      hfloor.push({name:humidity[step][1], y:humidity[step][2], color:Highcharts.getOptions().colors[0]});
+                        hfloor.push({name:"", y:(100-humidity[step][2]), color:"gray"});
+
+                        
+                        location.push([(85-(humidity[step][1])*10),'20']);
+                        location.push([(85-(humidity[step][1])*10),20]);
+                    }
+                }
+            }
+            if(floor ==1){
+                if(humidity[step][0]==floor){
+                    if(humidity[step][1]<=4){
+                        hfloor.push({x:((humidity[step][1])*10-5),y:100,z:humidity[step][2], Zone:humidity[step][1]});
+                    }
+                    if(humidity[step][1]==5){
+                        hfloor.push({x:35,y:60,z:humidity[step][2],Zone:humidity[step][1]});
+                    }
+                    if(humidity[step][1]==10){
+                        hfloor.push({x:5,y:60,z:humidity[step][2],Zone:humidity[step][1]});
+                    }
+                    if(humidity[step][1]>5&humidity[step][1]<10){
+                        hfloor.push({x:(85-10*humidity[step][1]),y:20,z:humidity[step][2],Zone:humidity[step][1]});
+                    }
+                }
+            }
+            if(floor ==2){
+                if(humidity[step][0]==floor){
+                    if(humidity[step][1]<=4){
+                        hfloor.push({x:(humidity[step][1]*10-5),y:100,z:humidity[step][2], Zone:humidity[step][1]});
+                    }
+                    if(humidity[step][1]==5){
+                        hfloor.push({x:35,y:60,z:humidity[step][2],Zone:humidity[step][1]});
+                    }
+                    if(humidity[step][1]==8){
+                        hfloor.push({x:5,y:60,z:humidity[step][2],Zone:humidity[step][1]});
+                    }
+                    if(humidity[step][1]==6){
+                        hfloor.push({x:35,y:20,z:humidity[step][2],Zone:humidity[step][1]});
+                    }
+                    if(humidity[step][1]==7){
+                        hfloor.push({x:25,y:20,z:humidity[step][2],Zone:humidity[step][1]});
+                        hfloor.push({x:15,y:20,z:humidity[step][2],Zone:humidity[step][1]});
+                        hfloor.push({x:5,y:20,z:humidity[step][2],Zone:humidity[step][1]});
+                    }
+                }
+            }
+                   // hfloor.push({x:humidity[step][5],y:humidity[step][6],z:humidity[step][2],floor:humidity[step][0],zone:humidity[step][1]});}
+                
+        };
+        
+            return location;
+       }
+
+       
+
+   </script>
+  </body>
+</html>

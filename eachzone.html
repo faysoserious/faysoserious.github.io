@@ -27,7 +27,6 @@
                     <button type="button" class="btn btn-secondary"><a href="Humidity.html">Humidity</a></button>
                     <button type="button" class="btn btn-secondary"><a href="light.html">light</a></button>
                     <button type="button" class="btn btn-secondary"><a href="eachzone.html">Zones</a></button>
-
                   </div>
           <div class="row">
               <div class="col-sm-6 col-md-6">
@@ -47,6 +46,11 @@
                       <div id = "zone1"><p>Zone 1</p></div>
                   </div>
               </div>
+              <div class="col-sm-6 col-md-6">
+                    <div id = "container4">
+                        
+                    </div>
+                </div>
               
             </div>
 
@@ -311,7 +315,60 @@ series: [{
 
 });
 // ----------------end create the chart container4-----------------
+//--------------------ground floor barchart-------------------------------------
+var sound0b = getbfloor(0,sound);
+console.log(sound0b);
+Highcharts.chart('container3', {
+    chart: {
+        type: 'column'
+    },
+    title: {
+        text: 'Sound level of ground floor'
+    },
+    subtitle: {
+        text: 'Source: <a href="https://scadadataapi.azurewebsites.net/Zone.html?B101_DI200_03">Wikipedia</a>'
+    },
+    xAxis: {
+        type: 'category',
+        categories: ['Zone 1', 'Zone 2', 'Zone 3', 'Zone 4', 'Zone 5', 'Zone 6', 'Zone 7', 'Zone8'],
+        min:0,
+        max:7,
+        labels: {
+            rotation: null,
+            style: {
+                fontSize: '13px',
+                fontFamily: 'Verdana, sans-serif'
+            }
+        }
+    },
+    yAxis: {
+        min: 0,
+        title: {
+            text: 'Population (millions)'
+        }
+    },
+    legend: {
+        enabled: false
+    },
 
+    series: [{
+        name: 'Population',
+        data: sound0b,
+        dataLabels: {
+            enabled: true,
+            rotation: null,
+            color: '#FFFFFF',
+            align: 'right',
+            format: '{point.y:.1f} dB', // one decimal
+            y: 10, // 10 pixels down from the top
+            style: {
+                fontSize: '13px',
+                fontFamily: 'Verdana, sans-serif'
+            }
+        }
+    }]
+});
+//-------------------end  ground floor bar chart---------------------------------------
 //------------------------------------------
 
        })
@@ -344,11 +401,7 @@ series: [{
            return data.reverse();
        }
 
-       function position(humidity){
-
-           return (humidity[2]+50);
-
-       }
+       
 
        function getfloor(floor,humidity){
            var hfloor=[];
@@ -418,6 +471,34 @@ series: [{
         };
         
             return hfloor.reverse();
+       }
+
+
+ function getbfloor(floor,humidity){
+           var hfloor=[];
+        var num=[8,10,8];
+        for (step=0;step<num[floor];step++){
+
+            hfloor.push([step,0])
+        }
+           
+        for (step=0,len=humidity.length;step<len;step++){
+            
+                if(humidity[step][0]==floor){
+                    for(var j=0;j<num[floor];j++){
+                        if(hfloor[j][0]==(humidity[step][1]-1)){
+                            hfloor[j][1]=humidity[step][2];
+                        }
+                    }
+                    
+                }
+            
+            
+                   // hfloor.push({x:humidity[step][5],y:humidity[step][6],z:humidity[step][2],floor:humidity[step][0],zone:humidity[step][1]});}
+                
+        };
+        
+            return hfloor;
        }
    </script>
   </body>

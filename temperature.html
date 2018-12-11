@@ -32,12 +32,7 @@
           <div class="row">
               <div class="col-sm-6 col-md-6">
                   <div id="container1"></div>
-                  <!--a href="sound.html">HTML Images</a-->
-                  <div class="btn-group" role="group" aria-label="Basic example">
-                    <button type="button" class="btn btn-secondary">Left</button>
-                    <button type="button" class="btn btn-secondary">Middle</button>
-                    <button type="button" class="btn btn-secondary">Right</button>
-                  </div>
+                  
               </div>
               <div class="col-sm-6 col-md-6">
                   <div id = "container2"></div>
@@ -57,11 +52,11 @@
    
    <script>
         
-        var sound = [];
+        var temperature = [];
         var floor =0;
-        var sound0;
-        var sound1;
-        var sound2;
+        var temperature0;
+        var temperature1;
+        var temperature2;
        
    
     
@@ -76,32 +71,32 @@
         for (step = 0,len = data.length; step < len; step++) {
         // Runs 5 times, with values of step 0 through 4.
    
-            if(data[step][3]=="Sound"){
-                sound.push(data[step]);
+            if(data[step][3]=="Temperature"){
+                temperature.push(data[step]);
                 
             }
  
 
             
         }
-        console.log(sound);
+        console.log(temperature);
         
-        sound.sort(function (a, b) {
+        temperature.sort(function (a, b) {
             
             return a[2] - b[2];
             
         });
 
 
-sound1 =gettfloor(1,sound);
-console.log(sound1);
-sound2 =gettfloor(2,sound);
+temperature1 =gettfloor(1,temperature);
+console.log(temperature1);
+temperature2 =gettfloor(2,temperature);
  
-console.log(sound2);
-sound0 =gettfloor(0,sound);
-console.log(sound0);
-var least = Math.min(sound1[sound1.length-1].value,sound2[sound2.length-1].value,sound0[sound0.length-1].value)
-var most = Math.max(sound0[0].value, sound1[0].value, sound2[0].value)
+console.log(temperature2);
+temperature0 =gettfloor(0,temperature);
+console.log(temperature0);
+var least = Math.min(temperature1[temperature1.length-1].value,temperature2[temperature2.length-1].value,temperature0[temperature0.length-1].value)
+var most = Math.max(temperature0[0].value, temperature1[0].value, temperature2[0].value)
 //-------------create the chart container2-------------
 
 
@@ -117,7 +112,7 @@ chart: {
 
 
 title: {
-    text: 'Sound level of 2nd floor'
+    text: 'temperature level of 2nd floor'
 },
 
 xAxis: {
@@ -138,7 +133,7 @@ colorAxis: {
     min:least,
     max: most,
    // minColor: '#FFFFFF',
-    maxColor: Highcharts.getOptions().colors[0]
+    maxColor: Highcharts.getOptions().colors[6]
 },
 
 legend: {
@@ -159,7 +154,7 @@ tooltip: {
 
 series: [{
     
-    data: sound2,
+    data: temperature2,
     dataLabels: {
         enabled: true,
         color: '#000000',
@@ -170,7 +165,7 @@ series: [{
 });
 //------------end create the chart container2---------------
 
-//-------------create the sound chart of floor1-------------
+//-------------create the temperature chart of floor1-------------
 
 
 
@@ -185,7 +180,7 @@ chart: {
 
 
 title: {
-    text: 'Sound level of 1st floor'
+    text: 'temperature level of 1st floor'
 },
 
 xAxis: {
@@ -206,7 +201,7 @@ colorAxis: {
     min:least,
     max: most,
    // minColor: '#FFFFFF',
-    maxColor: Highcharts.getOptions().colors[0]
+    maxColor: Highcharts.getOptions().colors[6]
 },
 
 legend: {
@@ -227,7 +222,7 @@ tooltip: {
 
 series: [{
     
-    data: sound1,
+    data: temperature1,
     dataLabels: {
         enabled: true,
         color: '#000000',
@@ -236,7 +231,7 @@ series: [{
 }]
 
 });
-//------------end create the sound chart of floor1---------------
+//------------end create the temperature chart of floor1---------------
   
 
 
@@ -255,7 +250,7 @@ chart: {
 
 
 title: {
-    text: 'Sound level of ground floor'
+    text: 'temperature level of ground floor'
 },
 
 xAxis: {
@@ -280,7 +275,7 @@ colorAxis: {
     min:least,
     max: most,
    // minColor: '#FFFFFF',
-    maxColor: Highcharts.getOptions().colors[0]
+    maxColor: Highcharts.getOptions().colors[6]
 },
 
 legend: {
@@ -301,7 +296,7 @@ tooltip: {
 
 series: [{
     
-    data: sound0,
+    data: temperature0,
     dataLabels: {
         enabled: true,
         color: '#000000',
