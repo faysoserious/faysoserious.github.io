@@ -1,0 +1,722 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://code.highcharts.com/highcharts.js"></script>
+    <script src="https://code.highcharts.com/modules/series-label.js"></script>
+    <script src="https://code.highcharts.com/modules/exporting.js"></script>
+    <script src="https://code.highcharts.com/modules/export-data.js"></script>
+    <script src="https://code.highcharts.com/modules/data.js"></script>
+    <script src="https://code.highcharts.com/highcharts-more.js"></script>
+    <script src="https://code.highcharts.com/modules/heatmap.js"></script>
+    <title>Hello, world!</title>
+  </head>
+  <body>
+      <div class="container">
+          <div class="row">
+              <div class="col-sm-6 col-md-6">
+                  <div id="container1"></div>
+                  <a href="boot.html">HTML Images</a>
+              </div>
+              <div class="col-sm-6 col-md-6">
+                  <div id = "container2"></div>
+              </div>
+              <div class="col-sm-6 col-md-6">
+                  <div id = "container3">
+                      <div id = "zone1"><p>Zone 1</p></div>
+                  </div>
+              </div>
+              <div class="col-sm-6 col-md-6">
+                <div id = "container4"></div>
+              </div>
+                <div class="col-sm-6 col-md-6">
+                    <div id = "container5"></div>
+                </div>
+                <div class="col-sm-6 col-md-6">
+                    <div id = "container6"></div>
+                </div>
+            </div>
+
+         
+      </div>
+      
+<!--loading data from api-->
+   <!--script type="text/javascript">
+
+        fetch('https://scadadataapi.azurewebsites.net/api/values')
+        .then(function(response) {
+            return response.json();
+         })
+        .then(function(myJson) {
+            console.log(JSON.stringify(myJson));
+        });
+   </script-->
+   
+   <script>
+        var humidity = []
+        var humidity0 = [];
+        var humidity1 = [];
+        var humidity2 = [];
+        var sound = [];
+        var light = [];
+        var temperature = [];
+        var Temperature0;
+        var floor =0;
+        var sound0;
+        var sound1;
+        var sound2;
+       
+   
+    
+       $.get('data.csv', function (csvFile) {
+          var data = parseCSVData(csvFile);
+          console.log(data);
+         
+        //  console.log(data[2]);
+        var step;
+        var len;
+        
+        for (step = 0,len = data.length; step < len; step++) {
+        // Runs 5 times, with values of step 0 through 4.
+            if(data[step][3]=="Humidity"){
+                humidity.push(data[step]);
+                
+                
+            }
+            if(data[step][3]=="Sound"){
+                sound.push(data[step]);
+                
+            }
+            if(data[step][3]=="Temperature"){
+                temperature.push(data[step]);
+                
+            }
+            if(data[step][3]=="Light"){
+                light.push(data[step]);
+                
+            }
+            
+        }
+        console.log(sound);
+        //console.log(humidity);
+       // console.log(temperature);
+       // console.log(light);
+        // sort by value
+        
+       /* humidity.sort(function (a, b) {
+            
+            return a[0] - b[0];
+            
+        });*/
+        sound.sort(function (a, b) {
+            
+            return a[2] - b[2];
+            
+        });
+
+/*      for (step=0; step<humidity.length;step++){
+           // humidity[step][0]=humidity[step][0]*10;
+            humidity[step][1]=humidity[step][1]+20;
+        }
+*/        
+
+          // create the container1
+          Highcharts.chart('container1', {
+
+chart: {
+    type: 'bubble',
+    plotBorderWidth: 1,
+    zoomType: 'xy'
+},
+
+legend: {
+    enabled: false
+},
+
+title: {
+    text: 'General Humidity condition'
+},
+
+subtitle: {
+    text: 'Source: <a href="https://scadadataapi.azurewebsites.net/api/values">DTU smart library</a> '
+},
+
+xAxis: {
+    gridLineWidth: 1,
+    title: {
+        text: 'Floor'
+    },
+    labels: {
+        format: '{value} floor'
+    },
+    plotLines: [{
+        color: 'black',
+        dashStyle: 'dot',
+        width: 2,
+        value: 0,
+        label: {
+            rotation: 0,
+            y: 50,
+            style: {
+                fontStyle: 'italic'
+            },
+            text: '1 floor'
+        },
+        zIndex: 3
+    }],
+},
+
+yAxis: {
+    startOnTick: false,
+    endOnTick: false,
+    title: {
+        text: 'Zones'
+    },
+    labels: {
+        format: 'Zone {value} '
+    },
+    maxPadding: 0.2,
+    plotBands: [{
+        from: 0,
+        to: 1.5,
+        color: '#E8F5E9'
+    }, {
+        from: 1.5,
+        to: 2.5,
+        color: '#FFFDE7'
+    }, {
+        from: 2.5,
+        to: 3.5,
+        color: "#FFEBEE"
+    }, {
+        from: 3.5,
+        to: 4.5,
+        color: "#B8D8D8"
+    }, {
+        from: 4.5,
+        to: 5.5,
+        color: "#7A9E9F"
+    }, {
+        from: 5.5,
+        to: 6.5,
+        color: "#4F6367"
+    }, {
+        from: 6.5,
+        to: 7.5,
+        color: "#EEF5DB"
+    }, {
+        from: 7.5,
+        to: 8.5,
+        color: "#FE5F55"
+    }, {
+        from: 8.5,
+        to: 9.5,
+        color: "#EB6A30"
+    }, {
+        from: 9.5,
+        to: 10.5,
+        color: "#F0BB1A"
+    }]
+},
+
+tooltip: {
+    useHTML: true,
+    headerFormat: '<table>',
+    pointFormat: '<tr><th colspan="2"><h3>{point.country}</h3></th></tr>' +
+        
+            '<tr><th>Floor:</th><td>{point.x}</td></tr>'
+        
+         +
+        '<tr><th>Zone:</th><td>{point.y}</td></tr>' +
+        '<tr><th>Humidity(%):</th><td>{point.z}%</td></tr>',
+    footerFormat: '</table>',
+    followPointer: true
+},
+
+plotOptions: {
+    series: {
+        dataLabels: {
+            enabled: true,
+            format: '{point.z}'
+        }
+    }
+},
+
+series: [{
+    data: humidity
+}]
+
+});
+ // ---------end create the chart container1----------------
+
+
+
+//-------------create the chart container2-------------
+
+
+sound2 =gettfloor(2,sound);
+ 
+console.log(sound2);
+console.log(sound2["value"]);
+Highcharts.chart('container2', {
+
+chart: {
+    type: 'heatmap',
+    marginTop: 40,
+    marginBottom: 80,
+    plotBorderWidth: 1
+},
+
+
+title: {
+    text: 'Sound level of 2nd floor'
+},
+
+xAxis: {
+    min: 0,
+    max: 3,
+    title:'Ground floor',
+    categories: ['A', 'B', 'C', 'D'],
+    labels: {enabled:false}
+},
+
+yAxis: {
+    categories: ['1', '2','3'],
+    title: null,
+    labels: {enabled:false}
+},
+
+colorAxis: {
+    min:sound2[sound2.length-1].value,
+    max: sound2[0].value,
+   // minColor: '#FFFFFF',
+    maxColor: Highcharts.getOptions().colors[0]
+},
+
+legend: {
+    align: 'right',
+    layout: 'vertical',
+    margin: 0,
+    verticalAlign: 'top',
+    y: 25,
+    symbolHeight: 280
+},
+
+tooltip: {
+    formatter: function () {
+        return 'Zone <b>' + this.point.Zone + '</b>' +
+             '<b> Temperature </b>'+ this.point.value ;
+    }
+},
+
+series: [{
+    
+    data: sound2,
+    dataLabels: {
+        enabled: true,
+        color: '#000000',
+        format: 'Zone {point.Zone}'
+    }
+}]
+
+});
+//------------end create the chart container2---------------
+
+//-------------create the sound chart of floor1-------------
+
+
+sound1 =gettfloor(1,sound);
+console.log(sound1);
+Highcharts.chart('container6', {
+
+chart: {
+    type: 'heatmap',
+    marginTop: 40,
+    marginBottom: 80,
+    plotBorderWidth: 1
+},
+
+
+title: {
+    text: 'Sound level of 1st floor'
+},
+
+xAxis: {
+    min: 0,
+    max: 3,
+    title:'Ground floor',
+    categories: ['A', 'B', 'C', 'D'],
+    labels: {enabled:false}
+},
+
+yAxis: {
+    categories: ['1', '2','3'],
+    title: null,
+    labels: {enabled:false}
+},
+
+colorAxis: {
+    min:sound1[sound1.length-1].value,
+    max: sound1[0].value,
+   // minColor: '#FFFFFF',
+    maxColor: Highcharts.getOptions().colors[0]
+},
+
+legend: {
+    align: 'right',
+    layout: 'vertical',
+    margin: 0,
+    verticalAlign: 'top',
+    y: 25,
+    symbolHeight: 280
+},
+
+tooltip: {
+    formatter: function () {
+        return 'Zone <b>' + this.point.Zone + '</b>' +
+             '<b> Temperature </b>'+ this.point.value ;
+    }
+},
+
+series: [{
+    
+    data: sound1,
+    dataLabels: {
+        enabled: true,
+        color: '#000000',
+        format: 'Zone {point.Zone}'
+    }
+}]
+
+});
+//------------end create the sound chart of floor1---------------
+  
+
+//------------------------------------------
+
+        var floor =0;
+        var humidity0;
+        humidity0 =getfloor(floor,humidity);
+        //console.log(humidity0);
+        
+        // create the container3
+        Highcharts.chart('container3', {
+
+        chart: {
+            type: 'bubble',
+            plotBorderWidth: 1,
+            zoomType: 'xy'
+        },
+
+        legend: {
+            enabled: false
+        },
+
+        title: {
+            text: 'General Humidity condition'
+        },
+
+        subtitle: {
+            text: 'Source: <a href="https://scadadataapi.azurewebsites.net/api/values">DTU smart library</a> '
+        },
+
+        xAxis: {
+            
+            gridLineWidth: 0,
+            min:50,
+            max:450,
+            
+            title: {
+                //enabled:false
+                text:'Ground Floor'
+            },
+            labels: {
+                enabled:false
+            },
+            /*plotLines: [{
+                color: 'black',
+                dashStyle: 'dot',
+                width: 2,
+                value: 0,
+                label: {
+                    rotation: 0,
+                    y: 50,
+                    style: {
+                        fontStyle: 'italic'
+                    },
+                    text: '1 floor'
+                },
+                zIndex: 3
+            }],*/
+            
+            plotBands: [{
+                from: 50,
+                to: 150,
+                color: '#DDDDDD'
+            }, {
+                from: 151,
+                to: 250,
+                color: '#DDDDDD'
+            }, {
+                from: 251,
+                to: 350,
+                color: "#DDDDDD"
+            }, {
+                from: 351,
+                to: 450,
+                color: "#DDDDDD"
+            }]
+        },
+
+        yAxis: {
+            visible: true,
+            startOnTick: false,
+            endOnTick: false,
+            tickAmount: 3,
+            min :0,
+            max : 200,
+            
+            title: {
+                enabled :false
+            },
+            labels: {
+                enabled:false
+            },
+            maxPadding: 0.2,
+            plotLines: [{
+                min :50,
+                max :350,
+                
+
+
+            }]
+           /* plotBands: [{
+                from: 0,
+                to: 150,
+                color: '#E8F5E9'
+            }, {
+                from: 150,
+                to: 250,
+                color: '#4F6367'
+            }
+            ]*/
+        },
+
+        tooltip: {
+            useHTML: true,
+            headerFormat: '<table>',
+            pointFormat: '<tr><th colspan="2"></th></tr>' +
+            '<tr><th>Floor:</th><td>{point.floor}</td></tr>'+
+            '<tr><th>Zone:</th><td>{point.zone}</td></tr>' +
+            '<tr><th>Humidity(%):</th><td>{point.z}%</td></tr>',
+            footerFormat: '</table>',
+            followPointer: true
+        },
+
+        plotOptions: {
+            series: {
+                dataLabels: {
+                    enabled: true,
+                    format: '{point.z:.0f}%'
+                }
+            }
+        },
+
+        series: [{
+            data: humidity0
+        },]
+
+        });
+          // end create the chart container3
+
+// ----------------create the chart container4-----------------
+sound0 =gettfloor(0,sound);
+console.log(sound0);
+
+Highcharts.chart('container4', {
+
+chart: {
+    type: 'heatmap',
+    marginTop: 40,
+    marginBottom: 80,
+    plotBorderWidth: 1
+},
+
+
+title: {
+    text: 'Sound level of ground floor'
+},
+
+xAxis: {
+    labels: {
+        enabled: false
+        },
+    min: 0,
+   
+    max: 3,
+    title:'Ground floor',
+    categories: ['A', 'B', 'C', 'D']
+   
+},
+
+yAxis: {
+    categories: ['1', '2'],
+    title: null,
+    labels: {enabled:false}
+},
+
+colorAxis: {
+    min:sound0[sound0.length-1].value,
+    max: sound0[0].value,
+   // minColor: '#FFFFFF',
+    maxColor: Highcharts.getOptions().colors[0]
+},
+
+legend: {
+    align: 'right',
+    layout: 'vertical',
+    margin: 0,
+    verticalAlign: 'top',
+    y: 25,
+    symbolHeight: 280
+},
+
+tooltip: {
+    formatter: function () {
+        return 'Zone <b>' + this.point.Zone + '</b>' +
+             '<b> Temperature </b>'+ this.point.value ;
+    }
+},
+
+series: [{
+    
+    data: sound0,
+    dataLabels: {
+        enabled: true,
+        color: '#000000',
+        format: 'Zone {point.Zone}'
+    }
+}]
+
+});
+// ----------------end create the chart container4-----------------
+
+//------------------------------------------
+
+       })
+
+
+
+    
+      
+       function parseCSVData(csvFile){
+           var data = [];
+           var lines = csvFile.split("\n");
+           $.each(lines, function(lineNumber,line){
+               if(lineNumber != 0) {//skip header line
+
+                var fields = line.split(",");
+                if(fields.length == 7){ //skip invalid lines
+             //       var timestamp = Date(fields[1]);
+                    var floor = parseInt(fields[0]);
+                    var zone = parseInt(fields[1]);
+                    var type = fields[3];
+                    var value = parseFloat(fields[4]);
+                    var time = Date.parse(fields[2])
+                    var plotx = parseInt(fields[5]);
+                    var ploty = parseInt(fields[6]);
+                    data.push([floor,zone,value,type, time,plotx,ploty]);
+                }
+               }
+           });
+           // reverse array Highcharts expected the data to be sorted in ascend order
+           return data.reverse();
+       }
+
+       function position(humidity){
+
+           return (humidity[2]+50);
+
+       }
+
+       function getfloor(floor,humidity){
+           var hfloor=[];
+           
+        for (step=0,len=humidity.length;step<len;step++){
+                if(humidity[step][0]==floor){
+                    hfloor.push({x:humidity[step][5],y:humidity[step][6],z:humidity[step][2],floor:humidity[step][0],zone:humidity[step][1]});}
+                
+        }
+        
+            return hfloor.reverse();
+       }
+
+       function gettfloor(floor,humidity){
+           var hfloor=[];
+           
+        for (step=0,len=humidity.length;step<len;step++){
+            if(floor ==0){
+                if(humidity[step][0]==floor){
+                    if(humidity[step][1]<=4){
+                        hfloor.push({x:(humidity[step][1]-1),y:1,value:humidity[step][2], Zone:humidity[step][1]});
+                    }
+                    if(humidity[step][1]>4){
+                        hfloor.push({x:(8-humidity[step][1]),y:0,value:humidity[step][2],Zone:humidity[step][1]});
+                    }
+                }
+            }
+            if(floor ==1){
+                if(humidity[step][0]==floor){
+                    if(humidity[step][1]<=4){
+                        hfloor.push({x:(humidity[step][1]-1),y:2,value:humidity[step][2], Zone:humidity[step][1]});
+                    }
+                    if(humidity[step][1]==5){
+                        hfloor.push({x:3,y:1,value:humidity[step][2],Zone:humidity[step][1]});
+                    }
+                    if(humidity[step][1]==10){
+                        hfloor.push({x:0,y:1,value:humidity[step][2],Zone:humidity[step][1]});
+                    }
+                    if(humidity[step][1]>5&humidity[step][1]<10){
+                        hfloor.push({x:(9-humidity[step][1]),y:0,value:humidity[step][2],Zone:humidity[step][1]});
+                    }
+                }
+            }
+            if(floor ==2){
+                if(humidity[step][0]==floor){
+                    if(humidity[step][1]<=4){
+                        hfloor.push({x:(humidity[step][1]-1),y:2,value:humidity[step][2], Zone:humidity[step][1]});
+                    }
+                    if(humidity[step][1]==5){
+                        hfloor.push({x:3,y:1,value:humidity[step][2],Zone:humidity[step][1]});
+                    }
+                    if(humidity[step][1]==8){
+                        hfloor.push({x:0,y:1,value:humidity[step][2],Zone:humidity[step][1]});
+                    }
+                    if(humidity[step][1]==6){
+                        hfloor.push({x:3,y:0,value:humidity[step][2],Zone:humidity[step][1]});
+                    }
+                    if(humidity[step][1]==7){
+                        hfloor.push({x:2,y:0,value:humidity[step][2],Zone:humidity[step][1]});
+                        hfloor.push({x:1,y:0,value:humidity[step][2],Zone:humidity[step][1]});
+                        hfloor.push({x:0,y:0,value:humidity[step][2],Zone:humidity[step][1]});
+                    }
+                }
+            }
+                   // hfloor.push({x:humidity[step][5],y:humidity[step][6],z:humidity[step][2],floor:humidity[step][0],zone:humidity[step][1]});}
+                
+        };
+        
+            return hfloor.reverse();
+       }
+   </script>
+  </body>
+</html>

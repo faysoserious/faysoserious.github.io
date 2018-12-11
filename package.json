@@ -4,6 +4,7 @@
   "description": "install highchart for visualizations",
   "main": "viz.js",
   "dependencies": {
+    "bootstrap": "^4.1.3",
     "highcharts": "^6.2.0"
   },
   "devDependencies": {},
