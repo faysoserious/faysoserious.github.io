@@ -33,11 +33,7 @@
               <div class="col-sm-6 col-md-6">
                   <div id="container1"></div>
                   <!--a href="sound.html">HTML Images</a-->
-                  <div class="btn-group" role="group" aria-label="Basic example">
-                    <button type="button" class="btn btn-secondary">Left</button>
-                    <button type="button" class="btn btn-secondary">Middle</button>
-                    <button type="button" class="btn btn-secondary">Right</button>
-                  </div>
+                  
               </div>
               <div class="col-sm-6 col-md-6">
                   <div id = "container2"></div>
@@ -123,7 +119,9 @@ title: {
 xAxis: {
     min: 0,
     max: 3,
-    title:'Ground floor',
+    title: {
+        text: 'Second Floor'
+            },
     categories: ['A', 'B', 'C', 'D'],
     labels: {enabled:false}
 },
@@ -191,7 +189,9 @@ title: {
 xAxis: {
     min: 0,
     max: 3,
-    title:'Ground floor',
+    title: {
+        text: 'First Floor'
+            },
     categories: ['A', 'B', 'C', 'D'],
     labels: {enabled:false}
 },
@@ -265,7 +265,9 @@ xAxis: {
     min: 0,
    
     max: 3,
-    title:'Ground floor',
+    title: {
+        text: 'Ground Floor'
+            },
     categories: ['A', 'B', 'C', 'D']
    
 },
